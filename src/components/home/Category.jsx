@@ -70,17 +70,17 @@ const Category = () => {
           <div key={index} className="text-center group cursor-pointer">
             <div className="group cursor-pointer flex flex-col items-center">
               <div
-               className={`w-36 h-36 rounded-full bg-white flex items-center justify-center transition-all duration-500
-                ${activeIndex===index ? "scale-100 shadow-2xl border-teal-400" :"shadow-lg border-gray-100 "}`}
+               className={`w-36 h-36 rounded-2xl overflow-hidden bg-white border-4 flex items-center justify-center 
+                ${activeIndex===index ? "scale-100 shadow-2xl border-yellow-400 " :"shadow-lg border-yellow-50 "}`}
               >
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain transition-all duration-300 group-hover:scale-105 group-hover:translate-y-2 group-hover:shadow-2xl"
                 />
               </div>
 
-              <h3 className="mt-3 text-md font-medium text-[#475569]">
+              <h3 className="mt-6 text-lg font-medium text-[#1E3A5F]">
                 {category.name}
               </h3>
             </div>
