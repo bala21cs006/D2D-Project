@@ -1,19 +1,17 @@
-import React from 'react'
-import Navbar from '../components/common/Navbar'
-import Hero from '../components/home/Hero'
-import Category from '../components/home/Category'
-import PromoBanner from '../components/home/PromoBanner'
-import Productcard from '../components/product/Productcard'
+import Hero from "../components/home/Hero";
+import Category from "../components/home/Category";
+import PromoBanner from "../components/home/PromoBanner";
+// import Productcard from "../components/Dashboard/product/Productcard";
 
 const Home = () => {
   return (
-   <>
-    <Hero/>
-    <Category/>
-    <PromoBanner/>
-    <Productcard/>
-   </>
-  )
-}
+    <>
+      <Hero />
+      <Category />
+      <PromoBanner />
+      {/* <Productcard /> */}
+    </>
+  );
+};
 
-export default Home
+export default Home;
