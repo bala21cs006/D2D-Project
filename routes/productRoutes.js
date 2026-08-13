@@ -9,7 +9,21 @@ import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", upload.single("image"), createProduct);
+// ===============================
+// Create Product
+// POST /api/products
+// ===============================
+
+router.post(
+  "/",
+  upload.single("image"),
+  createProduct
+);
+
+// ===============================
+// Get Products
+// GET /api/products
+// ===============================
 
 router.get("/", getProducts);
 

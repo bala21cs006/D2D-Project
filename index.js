@@ -19,13 +19,13 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 // API Routes
-app.use("/api/products", productRoutes);
+app.use("/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
 // MongoDB Connection
 mongoose
-.connect("mongodb://127.0.0.1:27017/mydatabase")
+.connect("mongodb://127.0.0.1:27017/adminlogin")
 .then(() => {
 console.log("MongoDB connected");
 })

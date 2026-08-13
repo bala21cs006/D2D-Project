@@ -1,19 +1,24 @@
 import express from "express";
-import {
-  createProduct,
-  getProducts,
-} from "../controllers/productController.js";
 
-import upload from "../middleware/uploadMiddleware.js";
+import {
+  adminRegister,
+  adminLogin,
+} from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.post(
-  "/products",
-  upload.single("image"),
-  createProduct
-);
+// ===============================
+// Admin Register
+// POST /api/auth/register
+// ===============================
 
-router.get("/products", getProducts);
+router.post("/register", adminRegister);
+
+// ===============================
+// Admin Login
+// POST /api/auth/login
+// ===============================
+
+router.post("/login", adminLogin);
 
 export default router;

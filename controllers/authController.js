@@ -2,7 +2,9 @@ import Admin from "../models/Admin.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 
+// =========================
 // Register Admin
+// =========================
 export const adminRegister = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -28,7 +30,6 @@ export const adminRegister = async (req, res) => {
       message: "Admin created successfully",
       admin,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -37,14 +38,16 @@ export const adminRegister = async (req, res) => {
   }
 };
 
+// =========================
 // Login Admin
+// =========================
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const admin = await Admin.findOne({ email });
-    console.log(admin);
-    
+
+    console.log("Admin:", admin);
 
     if (!admin) {
       return res.status(401).json({
@@ -54,6 +57,8 @@ export const adminLogin = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
+
+    console.log("Password Match:", isMatch);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -68,9 +73,11 @@ export const adminLogin = async (req, res) => {
       success: true,
       message: "Login Successful",
       token,
-      admin,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+      },
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -78,6 +85,3 @@ export const adminLogin = async (req, res) => {
     });
   }
 };
-
-
-
