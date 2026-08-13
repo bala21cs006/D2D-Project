@@ -1,7 +1,7 @@
 import React from "react";
 
 import Sidebar from "../Sidebar";
-import AdminDashboard from "../AdminDashboard";
+import AdminDashboard from "./AdminDashboard";
 
 const DashboardPage = () => {
   return (
