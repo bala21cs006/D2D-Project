@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import AdminLogin from "./pages/AdminLogin";
 import DashboardPage from "./components/Dashboard/pages/DashboardPage";
 import Addproductpage from "./components/Dashboard/pages/Addproductpage";
-import Products from "./components/Dashboard/product/Products";
+import Products from "./components/Admindashboard/RecentProducts";
 
 const App = () => {
   return (
@@ -14,18 +14,11 @@ const App = () => {
       <Navbar />
 
       <Routes>
-
         {/* Home */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
         {/* Admin Login */}
-        <Route
-          path="/login"
-          element={<AdminLogin />}
-        />
+        <Route path="/login" element={<AdminLogin />} />
 
         {/* Admin Dashboard */}
         <Route
@@ -41,10 +34,9 @@ const App = () => {
 
         {/* Products */}
         <Route
-          path="/admin-dashboard/products"
+          path="/admin-products"
           element={<Products />}
         />
-
       </Routes>
     </>
   );

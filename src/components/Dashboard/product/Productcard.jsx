@@ -75,7 +75,7 @@ const Addproductpage = () => {
 
         // Go to products page after 1 second
         setTimeout(() => {
-          navigate("/admin-dashboard/products");
+          navigate("/admin-dashboard");
         }, 1000);
       } else {
         setError(response.message || "Failed to add product");
