@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { FiPackage, FiPlus } from "react-icons/fi";
-import axios from "axios";
+import {
+  FiPackage,
+  FiPlus,
+  FiEdit,
+  FiTrash2,
+} from "react-icons/fi";
+
+import {
+  getProducts,
+  deleteProduct,
+} from "../../services/productApi";
 
 const RecentProducts = () => {
   const navigate = useNavigate();
@@ -10,18 +19,17 @@ const RecentProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch products
+  // ================= FETCH PRODUCTS =================
+
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/products"
-      );
+      const response = await getProducts();
 
-      console.log("PRODUCTS:", response.data);
+      console.log("PRODUCTS:", response);
 
-      setProducts(response.data.products || []);
+      setProducts(response.products || []);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("GET PRODUCTS ERROR:", error);
     } finally {
       setLoading(false);
     }
@@ -30,6 +38,47 @@ const RecentProducts = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  // ================= DELETE PRODUCT =================
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await deleteProduct(id);
+
+      // Remove deleted product from UI
+      setProducts((prevProducts) =>
+        prevProducts.filter(
+          (product) => product._id !== id
+        )
+      );
+
+      alert("Product deleted successfully");
+
+    } catch (error) {
+      console.error("DELETE PRODUCT ERROR:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to delete product"
+      );
+    }
+  };
+
+  // ================= EDIT PRODUCT =================
+
+  const handleEdit = (id) => {
+    console.log("EDIT PRODUCT ID:", id);
+
+    navigate(`/edit-product/${id}`);
+  };
 
   return (
     <motion.div
@@ -72,9 +121,11 @@ const RecentProducts = () => {
 
       {loading && (
         <div className="flex items-center justify-center py-20">
+
           <p className="text-slate-500">
             Loading products...
           </p>
+
         </div>
       )}
 
@@ -100,10 +151,13 @@ const RecentProducts = () => {
             <div className="absolute inset-0 bg-blue-400/20 blur-2xl rounded-full" />
 
             <div className="relative w-20 h-20 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500">
+
               <FiPackage size={35} />
+
             </div>
 
           </motion.div>
+
 
           <h3 className="text-lg font-semibold text-slate-800 mt-6">
             No products yet
@@ -113,14 +167,18 @@ const RecentProducts = () => {
             Start adding products to your store.
           </p>
 
+
           <motion.button
             onClick={() => navigate("/add-product")}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700"
           >
+
             <FiPlus />
+
             Add Product
+
           </motion.button>
 
         </div>
@@ -130,11 +188,12 @@ const RecentProducts = () => {
       {/* ================= PRODUCTS TABLE ================= */}
 
       {!loading && products.length > 0 && (
+
         <div className="overflow-x-auto">
 
           <table className="w-full">
 
-            {/* Table Header */}
+            {/* ================= TABLE HEADER ================= */}
 
             <thead className="bg-slate-50 border-b border-slate-200">
 
@@ -156,12 +215,16 @@ const RecentProducts = () => {
                   Rating
                 </th>
 
+                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+                  Actions
+                </th>
+
               </tr>
 
             </thead>
 
 
-            {/* Table Body */}
+            {/* ================= TABLE BODY ================= */}
 
             <tbody>
 
@@ -174,20 +237,35 @@ const RecentProducts = () => {
                   className="border-b border-slate-100 hover:bg-slate-50"
                 >
 
-                  {/* Image */}
+                  {/* ================= IMAGE ================= */}
 
                   <td className="px-6 py-4">
 
-                    <img
-                      src={`http://localhost:5000/${product.image}`}
-                      alt={product.name}
-                      className="w-14 h-14 rounded-lg object-cover"
-                    />
+                    {product.image ? (
+
+                      <img
+                        src={`http://localhost:5000/${product.image}`}
+                        alt={product.name}
+                        className="w-14 h-14 rounded-lg object-cover"
+                      />
+
+                    ) : (
+
+                      <div className="w-14 h-14 rounded-lg bg-slate-100 flex items-center justify-center">
+
+                        <FiPackage
+                          size={24}
+                          className="text-slate-400"
+                        />
+
+                      </div>
+
+                    )}
 
                   </td>
 
 
-                  {/* Product Name */}
+                  {/* ================= PRODUCT ================= */}
 
                   <td className="px-6 py-4">
 
@@ -198,7 +276,7 @@ const RecentProducts = () => {
                   </td>
 
 
-                  {/* Category */}
+                  {/* ================= CATEGORY ================= */}
 
                   <td className="px-6 py-4">
 
@@ -209,13 +287,61 @@ const RecentProducts = () => {
                   </td>
 
 
-                  {/* Rating */}
+                  {/* ================= RATING ================= */}
 
                   <td className="px-6 py-4">
 
                     <span className="font-semibold text-slate-700">
                       ⭐ {product.rating}
                     </span>
+
+                  </td>
+
+
+                  {/* ================= ACTIONS ================= */}
+
+                  <td className="px-6 py-4">
+
+                    <div className="flex items-center gap-2">
+
+                      {/* EDIT */}
+
+                      <motion.button
+                        type="button"
+                        onClick={() =>
+                          handleEdit(product._id)
+                        }
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 text-sm font-medium"
+                      >
+
+                        <FiEdit size={16} />
+
+                        Edit
+
+                      </motion.button>
+
+
+                      {/* DELETE */}
+
+                      <motion.button
+                        type="button"
+                        onClick={() =>
+                          handleDelete(product._id)
+                        }
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 text-sm font-medium"
+                      >
+
+                        <FiTrash2 size={16} />
+
+                        Delete
+
+                      </motion.button>
+
+                    </div>
 
                   </td>
 
@@ -228,6 +354,7 @@ const RecentProducts = () => {
           </table>
 
         </div>
+
       )}
 
     </motion.div>

@@ -7,6 +7,9 @@ import AdminLogin from "./pages/AdminLogin";
 import DashboardPage from "./components/Dashboard/pages/DashboardPage";
 import Addproductpage from "./components/Dashboard/pages/Addproductpage";
 import Products from "./components/Admindashboard/RecentProducts";
+import EditProduct from "./components/Dashboard/product/EditProduct";
+
+
 
 const App = () => {
   return (
@@ -37,6 +40,12 @@ const App = () => {
           path="/admin-products"
           element={<Products />}
         />
+        <Route
+          path="/edit-product/:id"
+          element={<EditProduct />}
+        />
+
+
       </Routes>
     </>
   );

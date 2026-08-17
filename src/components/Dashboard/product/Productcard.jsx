@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../../services/productApi";
+const data = new FormData();
 
+data.append("name", formData.name);
+data.append("category", formData.category);
+data.append("rating", formData.rating);
+data.append("image", image);
+
+await createProduct(data);
 
 const Addproductpage = () => {
   const navigate = useNavigate();
