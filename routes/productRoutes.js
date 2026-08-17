@@ -3,28 +3,21 @@ import express from "express";
 import {
   createProduct,
   getProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
 } from "../controllers/productController.js";
-
-import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-// ===============================
-// Create Product
-// POST /api/products
-// ===============================
-
-router.post(
-  "/",
-  upload.single("image"),
-  createProduct
-);
-
-// ===============================
-// Get Products
-// GET /api/products
-// ===============================
+router.post("/", createProduct);
 
 router.get("/", getProducts);
+
+router.get("/:id", getProductById);
+
+router.put("/:id", updateProduct);
+
+router.delete("/:id", deleteProduct);
 
 export default router;

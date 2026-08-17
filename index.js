@@ -11,31 +11,61 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+// ================= MIDDLEWARE =================
+
 app.use(cors());
+
 app.use(express.json());
 
-// Static folder for uploaded images
-app.use("/uploads", express.static("uploads"));
+// ================= UPLOADS =================
 
-// API Routes
-app.use("/products", productRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
+app.use(
+  "/uploads",
+  express.static("uploads")
+);
 
-// MongoDB Connection
+// ================= ROUTES =================
+
+app.use(
+  "/api/products",
+  productRoutes
+);
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+app.use(
+  "/api/admin",
+  adminRoutes
+);
+
+// ================= MONGODB =================
+
 mongoose
-.connect("mongodb://127.0.0.1:27017/adminlogin")
-.then(() => {
-console.log("MongoDB connected");
-})
-.catch((error) => {
-console.error("MongoDB connection error:", error);
-});
+  .connect(
+    "mongodb://127.0.0.1:27017/adminlogin"
+  )
+  .then(() => {
+    console.log(
+      "MongoDB connected"
+    );
+  })
+  .catch((error) => {
+    console.error(
+      "MongoDB connection error:",
+      error
+    );
+  });
 
-// Server
-const PORT = process.env.PORT || 5000;
+// ================= SERVER =================
+
+const PORT =
+  process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-console.log(`Server running on http://localhost:${PORT}`);
+  console.log(
+    `Server running on http://localhost:${PORT}`
+  );
 });
