@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createProduct } from "../../../services/productApi";
+
+import { createProduct } from "../../../services/createProductApi";
+import { getCategories } from "../../../services/categoryApi";
 
 const Addproductpage = () => {
   const navigate = useNavigate();
@@ -28,6 +30,54 @@ const Addproductpage = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  // =========================
+  // CATEGORIES
+  // =========================
+
+  const [categories, setCategories] = useState([]);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+
+  // =========================
+  // FETCH CATEGORIES
+  // =========================
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setCategoryLoading(true);
+        setError("");
+
+        const response = await getCategories();
+
+        console.log("CATEGORY RESPONSE:", response);
+
+        if (response.success) {
+          setCategories(response.categories || []);
+        } else {
+          setError(
+            response.message || "Failed to load categories"
+          );
+        }
+      } catch (error) {
+        console.error("CATEGORY FETCH ERROR:", error);
+
+        console.error(
+          "CATEGORY SERVER RESPONSE:",
+          error.response?.data
+        );
+
+        setError(
+          error.response?.data?.message ||
+            "Failed to load categories"
+        );
+      } finally {
+        setCategoryLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // =========================
   // HANDLE INPUT
@@ -64,19 +114,28 @@ const Addproductpage = () => {
     setMessage("");
     setError("");
 
-    // Validate name
+    // =========================
+    // VALIDATE NAME
+    // =========================
+
     if (!formData.name.trim()) {
       setError("Please enter product name");
       return;
     }
 
-    // Validate category
+    // =========================
+    // VALIDATE CATEGORY
+    // =========================
+
     if (!formData.category) {
       setError("Please select category");
       return;
     }
 
-    // Validate rating
+    // =========================
+    // VALIDATE RATING
+    // =========================
+
     if (
       formData.rating === "" ||
       formData.rating === null
@@ -85,7 +144,10 @@ const Addproductpage = () => {
       return;
     }
 
-    // Validate rating range
+    // =========================
+    // VALIDATE RATING RANGE
+    // =========================
+
     if (
       Number(formData.rating) < 0 ||
       Number(formData.rating) > 5
@@ -94,7 +156,10 @@ const Addproductpage = () => {
       return;
     }
 
-    // Validate image
+    // =========================
+    // VALIDATE IMAGE
+    // =========================
+
     if (!image) {
       setError("Please select a product image");
       return;
@@ -129,6 +194,10 @@ const Addproductpage = () => {
         image
       );
 
+      // =========================
+      // DEBUG
+      // =========================
+
       console.log(
         "NAME:",
         formData.name
@@ -161,6 +230,10 @@ const Addproductpage = () => {
         response
       );
 
+      // =========================
+      // SUCCESS
+      // =========================
+
       if (response.success) {
         setMessage(
           "Product added successfully!"
@@ -173,6 +246,7 @@ const Addproductpage = () => {
           rating: "",
         });
 
+        // Clear image
         setImage(null);
 
         // Reset file input
@@ -189,14 +263,12 @@ const Addproductpage = () => {
         setTimeout(() => {
           navigate("/admin-dashboard");
         }, 1000);
-
       } else {
         setError(
           response.message ||
             "Failed to add product"
         );
       }
-
     } catch (error) {
       console.error(
         "ADD PRODUCT ERROR:",
@@ -212,7 +284,6 @@ const Addproductpage = () => {
         error.response?.data?.message ||
           "Something went wrong"
       );
-
     } finally {
       setLoading(false);
     }
@@ -274,38 +345,33 @@ const Addproductpage = () => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+              disabled={categoryLoading}
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 disabled:bg-gray-100"
             >
 
               <option value="">
-                Select Category
+                {categoryLoading
+                  ? "Loading categories..."
+                  : "Select Category"}
               </option>
 
-              <option value="T-Shirts">
-                T-Shirts
-              </option>
-
-              <option value="Shirts">
-                Shirts
-              </option>
-
-              <option value="Pants">
-                Pants
-              </option>
-
-              <option value="Jeans">
-                Jeans
-              </option>
-
-              <option value="Shoes">
-                Shoes
-              </option>
-
-              <option value="Accessories">
-                Accessories
-              </option>
+              {categories.map((category) => (
+                <option
+                  key={category._id}
+                  value={category.name}
+                >
+                  {category.name}
+                </option>
+              ))}
 
             </select>
+
+            {!categoryLoading &&
+              categories.length === 0 && (
+                <p className="mt-2 text-sm text-red-500">
+                  No categories found
+                </p>
+              )}
 
           </div>
 
@@ -378,9 +444,7 @@ const Addproductpage = () => {
             <button
               type="button"
               onClick={() =>
-                navigate(
-                  "/admin-dashboard"
-                )
+                navigate("/admin-dashboard")
               }
               className="rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 hover:bg-gray-100"
             >

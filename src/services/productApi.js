@@ -10,12 +10,7 @@ export const createProduct = async (formData) => {
   try {
     const response = await axios.post(
       API_URL,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      formData
     );
 
     return response.data;
@@ -30,14 +25,15 @@ export const createProduct = async (formData) => {
   }
 };
 
-
 // ==================================================
 // GET ALL PRODUCTS
 // ==================================================
 
 export const getProducts = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(
+      API_URL
+    );
 
     return response.data;
 
@@ -51,10 +47,8 @@ export const getProducts = async () => {
   }
 };
 
-
 // ==================================================
 // GET SINGLE PRODUCT
-// Used by EditProduct.jsx
 // ==================================================
 
 export const getProductById = async (id) => {
@@ -75,10 +69,8 @@ export const getProductById = async (id) => {
   }
 };
 
-
 // ==================================================
 // UPDATE PRODUCT
-// Used by EditProduct.jsx
 // ==================================================
 
 export const updateProduct = async (id, data) => {
@@ -104,10 +96,8 @@ export const updateProduct = async (id, data) => {
   }
 };
 
-
 // ==================================================
 // DELETE PRODUCT
-// Used by DeleteProduct.jsx
 // ==================================================
 
 export const deleteProduct = async (id) => {
